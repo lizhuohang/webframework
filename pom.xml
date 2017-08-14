@@ -11,6 +11,8 @@
     <modules>
         <module>start</module>
         <module>simple</module>
+        <module>smart-framework</module>
+        <module>smart-web</module>
     </modules>
 
     <properties>
