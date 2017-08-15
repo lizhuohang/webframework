@@ -33,9 +33,9 @@ public class ReflectionUtil {
     /**
      * 调用方法
      *
-     * @param obj
-     * @param method
-     * @param args
+     * @param obj    方法所属类
+     * @param method 方法本身
+     * @param args   参数列表
      * @return
      */
     public static Object invokeMethod(Object obj, Method method, Object... args) {

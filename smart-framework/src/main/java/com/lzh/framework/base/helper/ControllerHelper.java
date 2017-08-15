@@ -37,7 +37,7 @@ public class ControllerHelper {
                             if (mapping.matches("\\w+:/\\w*")) {
                                 String[] array = mapping.split(":");
                                 if (ArrayUtils.isNotEmpty(array) && array.length == 2) {
-                                    String requestMethod = array[0];
+                                    String requestMethod = array[0].toLowerCase();
                                     String requestPath = array[1];
                                     Request request = new Request(requestMethod, requestPath);
                                     Handler handler = new Handler(cls, method);
