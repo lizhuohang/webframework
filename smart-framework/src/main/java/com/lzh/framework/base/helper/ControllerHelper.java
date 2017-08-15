@@ -5,6 +5,8 @@ import com.lzh.framework.base.bean.Handler;
 import com.lzh.framework.base.bean.Request;
 import com.lzh.framework.base.utils.CollectionUtil;
 import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import java.util.Set;
  * Created by lzh on 2017/8/14.
  */
 public class ControllerHelper {
+    private static final Logger logger = LoggerFactory.getLogger(ControllerHelper.class);
+
     private static final Map<Request, Handler> ACTION_MAP = new HashMap<>();
 
     static {
@@ -42,6 +46,8 @@ public class ControllerHelper {
                                     Request request = new Request(requestMethod, requestPath);
                                     Handler handler = new Handler(cls, method);
                                     ACTION_MAP.put(request, handler);
+                                    logger.info("Controller Scanner -- Method : {} , Path : {}", requestMethod,
+                                            requestPath);
                                 }
                             }
                         }
