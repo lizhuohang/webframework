@@ -1,6 +1,8 @@
 package com.lzh.framework.base.helper;
 
 import com.lzh.framework.base.utils.ReflectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Set;
  */
 public final class BeanHelper {
     private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(BeanHelper.class);
 
     static {
         Set<Class<?>> beanClassSet = ClassHelper.getBeanClassSet();
@@ -43,5 +47,19 @@ public final class BeanHelper {
             throw new RuntimeException("can not get bean by class:" + cls);
         }
         return (T) BEAN_MAP.get(cls);
+    }
+
+    /**
+     * 设置 Bean 实例
+     * 此方法暴露出来其实危险性比较大，如果外部调用重新set一个已经在Map中的key可能导致功能异常
+     *
+     * @param cls
+     * @param obj
+     */
+    public static void setBean(Class<?> cls, Object obj) {
+        if (BEAN_MAP.containsKey(cls)) {
+            logger.warn("Bean '{}' is already in Bean Map", cls.getSimpleName());
+        }
+        BEAN_MAP.put(cls, obj);
     }
 }

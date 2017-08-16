@@ -58,6 +58,13 @@
             <version>2.4.4</version>
         </dependency>
 
+        <!-- Proxy -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
         <!-- tools -->
         <dependency>
             <groupId>commons-lang</groupId>
