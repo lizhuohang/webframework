@@ -7,6 +7,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by lizhuohang on 17/8/14.
@@ -29,10 +30,21 @@ public final class IocHelper {
                         // 判断当前BeanField是否带有Inject注解
                         if (beanField.isAnnotationPresent(Inject.class)) {
                             Class<?> beanFieldClass = beanField.getType();
-                            Object beanFieldInstance = beanMap.get(beanFieldClass);
-                            if (beanFieldInstance != null) {
-                                // 通过反射初始化 BeanField 的值
-                                ReflectionUtil.setField(beanInstance, beanField, beanFieldInstance);
+                            // 通过接口类获取其子类的Set
+                            Set<Class<?>> implClasses = ClassHelper.getClassSetBySuper(beanFieldClass);
+                            Object beanFieldInstance = null;
+                            if (CollectionUtil.isNotEmpty(implClasses)) {
+                                // 子类不为空，从子类中挑选实现类进行实例注入
+                                if (implClasses.size() == 1) {
+                                    // 只有一个实现类
+                                    beanFieldInstance = beanMap.get(implClasses.iterator().next());
+                                } else {
+                                    // 有多个实现类
+                                }
+                                if (beanFieldInstance != null) {
+                                    // 通过反射初始化 BeanField 的值
+                                    ReflectionUtil.setField(beanInstance, beanField, beanFieldInstance);
+                                }
                             }
                         }
                     }

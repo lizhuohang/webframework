@@ -45,6 +45,15 @@ public abstract class AspectProxy implements Proxy {
     public void end() {
     }
 
+    /**
+     * 预留的切点判断方法，根据方法，class等判断是否可以切入
+     *
+     * @param cls
+     * @param method
+     * @param params
+     * @return
+     * @throws Throwable
+     */
     public boolean intercept(Class<?> cls, Method method, Object[] params) throws Throwable {
         return true;
     }

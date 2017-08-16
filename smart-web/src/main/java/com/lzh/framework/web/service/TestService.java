@@ -5,4 +5,5 @@ package com.lzh.framework.web.service;
  */
 public interface TestService {
     String getName();
+    void testTransaction();
 }
