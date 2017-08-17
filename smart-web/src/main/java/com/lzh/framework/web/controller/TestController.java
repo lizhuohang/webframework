@@ -6,6 +6,7 @@ import com.lzh.framework.base.annotation.Inject;
 import com.lzh.framework.base.bean.Data;
 import com.lzh.framework.base.bean.Param;
 import com.lzh.framework.base.bean.View;
+import com.lzh.framework.base.helper.ServletHelper;
 import com.lzh.framework.base.helper.UploadHelper;
 import com.lzh.framework.web.service.TestService;
 
@@ -36,8 +37,9 @@ public class TestController {
 
     @Action("get:/indexPage")
     public View indexPage() {
+        String value = ServletHelper.getRequestAttribute("a");
         View view = new View("hello.jsp");
-        view.addModel("current", "2107-01-01");
+        view.addModel("current", value);
         return view;
     }
 

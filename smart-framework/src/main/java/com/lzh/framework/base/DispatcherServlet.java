@@ -9,6 +9,7 @@ import com.lzh.framework.base.helper.ConfigHelper;
 import com.lzh.framework.base.helper.ControllerHelper;
 import com.lzh.framework.base.helper.RequestHelper;
 import com.lzh.framework.base.helper.ResponseHelper;
+import com.lzh.framework.base.helper.ServletHelper;
 import com.lzh.framework.base.helper.UploadHelper;
 import com.lzh.framework.base.utils.ReflectionUtil;
 import org.slf4j.Logger;
@@ -51,43 +52,48 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 获取请求方法与路径
-        String requestMethod = req.getMethod().toLowerCase();
-        String requestPath = req.getPathInfo();
+        ServletHelper.init(req, resp);
+        try {
+            // 获取请求方法与路径
+            String requestMethod = req.getMethod().toLowerCase();
+            String requestPath = req.getPathInfo();
 
-        if (requestPath.equals("/favicon.ico")) {
-            return;
-        }
+            if (requestPath.equals("/favicon.ico")) {
+                return;
+            }
 
-        // 获取 Action 处理
-        Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
-        if (handler != null) {
-            // 获取 Controller 类及其 Bean 实例
-            Class<?> controllerClass = handler.getControllerClass();
-            Object controllerBean = BeanHelper.getBean(controllerClass);
+            // 获取 Action 处理
+            Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+            if (handler != null) {
+                // 获取 Controller 类及其 Bean 实例
+                Class<?> controllerClass = handler.getControllerClass();
+                Object controllerBean = BeanHelper.getBean(controllerClass);
 
-            // 创建请求参数对象
-            Param param;
-            if (UploadHelper.isMultipart(req)) {
-                param = UploadHelper.createParam(req);
-            } else {
-                param = RequestHelper.createParam(req);
+                // 创建请求参数对象
+                Param param;
+                if (UploadHelper.isMultipart(req)) {
+                    param = UploadHelper.createParam(req);
+                } else {
+                    param = RequestHelper.createParam(req);
+                }
+                // 调用 Action 方法
+                Method actionMethod = handler.getActionMethod();
+                Object result;
+                if (actionMethod.getParameterCount() != 0) {
+                    result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
+                } else {
+                    result = ReflectionUtil.invokeMethod(controllerBean, actionMethod);
+                }
+                if (result instanceof View) {
+                    View view = (View) result;
+                    ResponseHelper.handleViewResult(view, req, resp);
+                } else if (result instanceof Data) {
+                    Data data = (Data) result;
+                    ResponseHelper.handleDataResult(data, resp);
+                }
             }
-            // 调用 Action 方法
-            Method actionMethod = handler.getActionMethod();
-            Object result;
-            if (actionMethod.getParameterCount() != 0) {
-                result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
-            } else {
-                result = ReflectionUtil.invokeMethod(controllerBean, actionMethod);
-            }
-            if (result instanceof View) {
-                View view = (View) result;
-                ResponseHelper.handleViewResult(view, req, resp);
-            } else if (result instanceof Data) {
-                Data data = (Data) result;
-                ResponseHelper.handleDataResult(data, resp);
-            }
+        } finally {
+            ServletHelper.destroy();
         }
     }
 }
