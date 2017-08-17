@@ -6,8 +6,10 @@ import com.lzh.framework.base.annotation.Inject;
 import com.lzh.framework.base.bean.Data;
 import com.lzh.framework.base.bean.Param;
 import com.lzh.framework.base.bean.View;
+import com.lzh.framework.base.helper.UploadHelper;
 import com.lzh.framework.web.service.TestService;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +35,17 @@ public class TestController {
     }
 
     @Action("get:/indexPage")
-    public View indexPage(Param param) {
+    public View indexPage() {
         View view = new View("hello.jsp");
         view.addModel("current", "2107-01-01");
         return view;
+    }
+
+    @Action("post:/postFile")
+    public Data postFile(Param param) throws FileNotFoundException {
+
+        UploadHelper.uploadFile("/Users/lizhuohang/Downloads/手机/", param.getFile("file"));
+
+        return new Data(param.getFieldMap());
     }
 }
