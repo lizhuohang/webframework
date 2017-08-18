@@ -13,6 +13,7 @@
         <module>simple</module>
         <module>smart-framework</module>
         <module>smart-web</module>
+        <module>smart-security-plugin</module>
     </modules>
 
     <properties>

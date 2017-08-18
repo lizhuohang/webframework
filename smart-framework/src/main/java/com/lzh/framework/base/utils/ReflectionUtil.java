@@ -30,6 +30,17 @@ public class ReflectionUtil {
         return instance;
     }
 
+    public static Object newInstance(String className) {
+        Object instance;
+        try {
+            instance = ClassUtil.loadClass(className, true).newInstance();
+        } catch (Exception e) {
+            logger.error("new instance from className failure", e);
+            throw new RuntimeException(e);
+        }
+        return instance;
+    }
+
     /**
      * 调用方法
      *

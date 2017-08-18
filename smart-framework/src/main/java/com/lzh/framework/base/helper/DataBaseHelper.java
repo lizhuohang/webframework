@@ -114,6 +114,15 @@ public class DataBaseHelper {
     }
 
     /**
+     * 获取data source
+     *
+     * @return
+     */
+    public static BasicDataSource getDataSource() {
+        return DATA_SOURCE;
+    }
+
+    /**
      * 获取数据库链接
      */
     private static Connection getConnection() {
